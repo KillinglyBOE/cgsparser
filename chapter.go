@@ -15,11 +15,12 @@ type Chapter struct {
 }
 
 type Section struct {
-	Number  string
-	Name    string
-	Body    string
-	Source  string
-	History string
+	Number     string
+	Name       string
+	Body       string
+	Source     string
+	History    string
+	Annotation string
 }
 
 func NewChapter(url string) (Chapter, error) {
@@ -52,16 +53,48 @@ func NewChapter(url string) (Chapter, error) {
 			if exists {
 				break
 			}
-
 			section.Body += "\n\n" + nextone.Text()
-			nextone = nextone.Parent().Next()
-			if !nextone.Is("P") {
+			nextone = nextone.Next()
+			if !nextone.Is("p") {
 				break
 			}
 		}
-		if !strings.HasPrefix(nextone.Text(), "\n") {
-			section.Source = nextone.Text()
-			section.History = nextone.Parent().Next().Text()
+		for {
+			if !nextone.Is("p") {
+				break
+			}
+			className, exists := nextone.Attr("class")
+			if !exists {
+				break
+			}
+			text := strings.Replace(nextone.Text(), "*", "\\*", -1)
+
+			// Based on class name, build everything
+			switch className {
+			case "source-first":
+				section.Source += text
+				break
+			case "source":
+				section.Source += text
+				break
+			case "history-first":
+				section.History += text
+				break
+			case "history":
+				section.History += text
+				break
+			case "annotation-first":
+				section.Annotation += text
+				break
+			case "annotation":
+				section.Annotation += text
+				break
+			default:
+				break
+			}
+
+			// Move on
+			nextone = nextone.Next()
 		}
 
 		chapter.Sections = append(chapter.Sections, section)

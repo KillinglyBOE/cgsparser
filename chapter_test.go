@@ -1,6 +1,7 @@
 package cgsparser
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -19,3 +20,13 @@ func TestChapterParse(t *testing.T) {
 		t.Fatalf("Should have found 2 sections, found %d", len(ch.Sections))
 	}
 }
+
+/*
+func TestChapterFullParse(t *testing.T) {
+	ch, err := NewChapter("https://www.cga.ct.gov/current/pub/chap_164.htm")
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+	fmt.Println(ch.ToMarkdown())
+}
+*/
