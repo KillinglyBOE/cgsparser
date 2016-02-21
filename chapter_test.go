@@ -12,8 +12,8 @@ func TestChapterParse(t *testing.T) {
 	if ch.Number != "181a" {
 		t.Fatalf("181a != %s", ch.Number)
 	}
-	if ch.Title != "CONNECTICUT HUMANITIES GRANTS" {
-		t.Fatalf("CONNECTICUT HUMANITIES GRANTS != %s", ch.Title)
+	if ch.Name != "CONNECTICUT HUMANITIES GRANTS" {
+		t.Fatalf("CONNECTICUT HUMANITIES GRANTS != %s", ch.Name)
 	}
 	if len(ch.Sections) != 2 {
 		t.Fatalf("Should have found 2 sections, found %d", len(ch.Sections))

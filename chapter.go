@@ -4,17 +4,19 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"log"
 	"strings"
+	//"os"
+	//"encoding/json"
 )
 
 type Chapter struct {
-	Number string 
-	Title string
+	Number   string
+	Name     string
 	Sections []Section
 }
 
 type Section struct {
 	Number  string
-	Title   string
+	Name    string
 	Body    string
 	Source  string
 	History string
@@ -30,7 +32,7 @@ func NewChapter(url string) (Chapter, error) {
 	chapter := Chapter{}
 
 	chapter.Number = strings.TrimPrefix(doc.Find("H2.chap-no").Text(), "CHAPTER ")
-	chapter.Title = doc.Find("H2.chap-name").Text()
+	chapter.Name = doc.Find("H2.chap-name").Text()
 	chapter.Sections = make([]Section, 0)
 
 	doc.Find("P SPAN.catchln").Each(func(i int, s *goquery.Selection) {
@@ -38,16 +40,40 @@ func NewChapter(url string) (Chapter, error) {
 
 		fullSectionSpan := strings.TrimPrefix(s.Text(), "Sec. ")
 		section.Number = fullSectionSpan[0:strings.Index(fullSectionSpan, ".")]
-		section.Title = fullSectionSpan[strings.Index(fullSectionSpan, " ")+1:]
+		section.Name = fullSectionSpan[strings.Index(fullSectionSpan, " ")+1:]
 
 		log.Printf("Found section %s", section.Number)
 
-		section.Body = strings.TrimPrefix(s.Parent().Text(), "Sec. " + section.Number + ". " + section.Title + " ")
-		section.Source = s.Parent().Next().Text()
-		section.History = s.Parent().Next().Next().Text()
+		section.Body = strings.TrimPrefix(s.Parent().Text(), "Sec. "+section.Number+". "+section.Name+" ")
+		nextone := s.Parent().Next()
+		for {
+			// Hack -- if there's a class, we can move on
+			_, exists := nextone.Attr("class")
+			if exists {
+				break
+			}
+
+			section.Body += "\n\n" + nextone.Text()
+			nextone = nextone.Parent().Next()
+			if !nextone.Is("P") {
+				break
+			}
+		}
+		if !strings.HasPrefix(nextone.Text(), "\n") {
+			section.Source = nextone.Text()
+			section.History = nextone.Parent().Next().Text()
+		}
 
 		chapter.Sections = append(chapter.Sections, section)
 	})
+
+	/*
+		b, err := json.MarshalIndent(chapter, "", "\t")
+		if err != nil {
+			log.Print("error:", err)
+		}
+		os.Stdout.Write(b)
+	*/
 
 	return chapter, nil
 }
