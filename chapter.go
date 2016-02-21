@@ -42,7 +42,7 @@ func NewChapter(url string) (Chapter, error) {
 		section.Number = fullSectionSpan[0:strings.Index(fullSectionSpan, ".")]
 		section.Name = fullSectionSpan[strings.Index(fullSectionSpan, " ")+1:]
 
-		log.Printf("Found section %s", section.Number)
+		//log.Printf("Found section %s", section.Number)
 
 		section.Body = strings.TrimPrefix(s.Parent().Text(), "Sec. "+section.Number+". "+section.Name+" ")
 		nextone := s.Parent().Next()

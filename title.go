@@ -34,7 +34,7 @@ func NewTitle(url string) (Title, error) {
 	doc.Find("TABLE TR TD.left_40pct A").Each(func(i int, s *goquery.Selection) {
 		txt, exists := s.Attr("href")
 		if exists && txt != "titles.htm" {
-			log.Printf("Parsing URL : %s%s", urlprefix, txt)
+			//log.Printf("Parsing URL : %s%s", urlprefix, txt)
 			chap, err := NewChapter(urlprefix + txt)
 			if err == nil {
 				title.Chapters = append(title.Chapters, chap)

@@ -43,6 +43,11 @@ func (c Chapter) ToMarkdown() string {
 	buf.WriteString(c.Name)
 	buf.WriteString("\n\n")
 
+	// Iterate
+	for _, s := range c.Sections {
+		buf.WriteString(s.ToMarkdown())
+	}
+
 	return buf.String()
 }
 
