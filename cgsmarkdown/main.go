@@ -17,6 +17,6 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf(title.ToMarkdown("Appendix: CGS "))
+		fmt.Printf(title.ToMarkdown("Appendix: CGS"))
 	}
 }
