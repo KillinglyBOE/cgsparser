@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/KillinglyBOE/cgsparser"
 	"os"
+
+	"github.com/KillinglyBOE/cgsparser"
 )
 
 func main() {

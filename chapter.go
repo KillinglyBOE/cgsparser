@@ -1,11 +1,12 @@
 package cgsparser
 
 import (
-	"github.com/PuerkitoBio/goquery"
-	"log"
-	"strings"
-	//"os"
 	//"encoding/json"
+	"log"
+	//"os"
+	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 type Chapter struct {
