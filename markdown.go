@@ -5,11 +5,11 @@ import (
 	"strings"
 )
 
-func (t Title) ToMarkdown(titlePrefix string) string {
+func (t Title) ToMarkdown(titlePrefix string, layers int) string {
 	buf := new(bytes.Buffer)
 
 	// Heading
-	buf.WriteString("## ")
+	buf.WriteString(layersPrefix(layers) + " ")
 	if titlePrefix != "" {
 		buf.WriteString(titlePrefix)
 		buf.WriteString(" ")
@@ -28,17 +28,17 @@ func (t Title) ToMarkdown(titlePrefix string) string {
 
 	// Iterate
 	for _, c := range t.Chapters {
-		buf.WriteString(c.ToMarkdown())
+		buf.WriteString(c.ToMarkdown(layers + 1))
 	}
 
 	return buf.String()
 }
 
-func (c Chapter) ToMarkdown() string {
+func (c Chapter) ToMarkdown(layers int) string {
 	buf := new(bytes.Buffer)
 
 	// Heading
-	buf.WriteString("### Chapter ")
+	buf.WriteString(layersPrefix(layers) + " Chapter ")
 	buf.WriteString(strings.Replace(c.Number, "*", "", -1))
 	buf.WriteString(": ")
 	buf.WriteString(c.Name)
@@ -46,17 +46,17 @@ func (c Chapter) ToMarkdown() string {
 
 	// Iterate
 	for _, s := range c.Sections {
-		buf.WriteString(s.ToMarkdown())
+		buf.WriteString(s.ToMarkdown(layers + 1))
 	}
 
 	return buf.String()
 }
 
-func (s Section) ToMarkdown() string {
+func (s Section) ToMarkdown(layers int) string {
 	buf := new(bytes.Buffer)
 
 	// Heading
-	buf.WriteString("#### Section ")
+	buf.WriteString(layersPrefix(layers) + " Section ")
 	buf.WriteString(s.Number)
 	buf.WriteString(": ")
 	buf.WriteString(s.Name)
@@ -84,4 +84,12 @@ func (s Section) ToMarkdown() string {
 	}
 
 	return buf.String()
+}
+
+func layersPrefix(layers int) string {
+	x := ""
+	for i := 0; i <= layers; i++ {
+		x += "#"
+	}
+	return x
 }

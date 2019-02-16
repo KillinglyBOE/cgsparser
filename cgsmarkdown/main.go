@@ -1,14 +1,19 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"os"
 
 	"github.com/KillinglyBOE/cgsparser"
 )
 
+var (
+	baseLevel = flag.Int("base", 0, "Base level of indent")
+)
+
 func main() {
-	args := os.Args[1:]
+	flag.Parse()
+	args := flag.Args()
 	if len(args) < 1 {
 		fmt.Printf("No titles given.\n")
 		return
@@ -18,6 +23,6 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf(title.ToMarkdown("Appendix: CGS"))
+		fmt.Printf(title.ToMarkdown("Appendix: CGS", *baseLevel))
 	}
 }
